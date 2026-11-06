@@ -1,6 +1,6 @@
 # Indexer Replay Oracle
 
-[![CI](https://github.com/ranajahanzaib/indexer-replay-oracle/actions/workflows/ci.yml/badge.svg)](https://github.com/ranajahanzaib/indexer-replay-oracle/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/ranajahanzaib/indexer-replay-oracle/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ranajahanzaib/indexer-replay-oracle/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **`iro` tests whether an application's persistent event projection survives replay.** It feeds offline canonical blockchain events to your consumer, injects duplicate deliveries, restarts real processes, exercises a negotiated crash point, and compares normalized SQLite or PostgreSQL projection state.
 
