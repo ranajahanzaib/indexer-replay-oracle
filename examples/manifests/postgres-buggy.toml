@@ -1,0 +1,31 @@
+version = 1
+name = "transfer-ledger-buggy"
+fixture = "../fixtures/events.jsonl"
+chain_id = 31337
+from_block = 100
+to_block = 100
+expected_state = "../fixtures/expected-state.json"
+
+[consumer]
+command = ["../../target/debug/iro-example-consumer", "serve", "--mode", "buggy"]
+timeout_seconds = 10
+
+[database]
+kind = "postgres"
+url_env = "IRO_POSTGRES_URL"
+
+[ordering]
+mode = "conflict_keys"
+
+[[projection.tables]]
+name = "balances"
+columns = ["account_id", "balance"]
+order_by = ["account_id"]
+
+[testing]
+runs = 10
+seed = 42
+max_duplicates_per_event = 2
+max_restarts = 4
+enable_crash_faults = true
+enable_reordering = true

@@ -1,0 +1,40 @@
+[package]
+name = "indexer-replay-oracle"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Deterministic replay testing for application-owned event projections"
+default-run = "iro"
+
+[lib]
+name = "iro"
+
+[[bin]]
+name = "iro"
+path = "src/main.rs"
+
+[[bin]]
+name = "iro-example-consumer"
+path = "src/bin/consumer.rs"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+hex = "0.4"
+num-bigint = "0.4"
+rand = "0.8"
+rand_chacha = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite", "postgres", "bigdecimal", "json", "chrono"] }
+bigdecimal = "0.4"
+chrono = "0.4"
+tempfile = "3"
+thiserror = "2"
+tokio = { version = "1", features = ["full"] }
+toml = "0.8"
+url = "2"
+
+[dev-dependencies]
+proptest = "1"

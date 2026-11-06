@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "tables": {
+    "balances": {
+      "columns": ["account_id", "balance"],
+      "keys": ["account_id"],
+      "rows": [
+        [
+          {
+            "type": "text",
+            "value": "alice"
+          },
+          {
+            "type": "text",
+            "value": "125"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "bob"
+          },
+          {
+            "type": "text",
+            "value": "40"
+          }
+        ]
+      ]
+    }
+  }
+}

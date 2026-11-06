@@ -44,3 +44,17 @@ We welcome contributions of all kinds to improve this project! Here's how you ca
 ### Issues
 
 Feel free to report bugs or suggest enhancements by creating an issue. Be sure to include detailed information about the problem and, if possible, steps to reproduce it.
+
+### Rust developer setup
+
+Use the current stable Rust toolchain. Build both executables with `cargo build --workspace --locked`. SQLite is bundled and requires no server.
+
+Before submitting a change, run:
+
+```sh
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+```
+
+Run the correct and buggy example manifests; the buggy verification must exit 1 with useful differences. Changes to scheduling, identity, normalization or reduction require regression/property tests and documentation of any format/seed mapping changes. Keep reports free of environment credentials. PostgreSQL setup and explicitly enabled tests are in [docs/postgres.md](docs/postgres.md).

@@ -72,3 +72,9 @@ yarn-error.log*
 
 # Python
 venv
+
+# Replay execution artifacts
+/reports/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

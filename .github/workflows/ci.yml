@@ -1,33 +1,65 @@
 name: CI
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
+permissions:
+  contents: read
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  rust:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          node-version: 20
-
-      # Uncomment and adjust the steps below to match your project's setup
-
-      # - name: Install dependencies
-      #   run: npm ci
-
-      # - name: Lint
-      #   run: npm run lint
-
-      # - name: Run tests
-      #   run: npm test
-
-      # - name: Build
-      #   run: npm run build
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - run: cargo build --workspace --locked
+      - run: ./target/debug/iro verify --manifest examples/manifests/correct.toml --report-dir reports/correct --junit reports/results.xml
+      - name: Detect and reduce the intentional bug
+        shell: bash
+        run: |
+          set +e
+          ./target/debug/iro verify --manifest examples/manifests/buggy.toml --report-dir reports/buggy
+          status=$?
+          set -e
+          test "$status" -eq 1
+          ./target/debug/iro minimize --bundle reports/buggy/failure-duplicate-delivery
+          set +e
+          ./target/debug/iro reproduce --bundle reports/buggy/failure-duplicate-delivery/minimized
+          status=$?
+          set -e
+          test "$status" -eq 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-reports-${{ matrix.os }}
+          path: reports/
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: iro
+          POSTGRES_PASSWORD: iro-local-test
+          POSTGRES_DB: iro_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U iro -d iro_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      IRO_POSTGRES_URL: postgres://iro:iro-local-test@127.0.0.1:5432/iro_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace --locked --test replay postgres_ -- --ignored
