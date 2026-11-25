@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use Indexer Replay Oracle (iro) in research or teaching, please cite this software."
+title: "Indexer Replay Oracle (iro)"
+version: 0.1.0
+authors:
+  - family-names: Rana
+    given-names: Jahanzaib
+    orcid: "https://orcid.org/0009-0006-7085-0440"
+repository-code: "https://github.com/ranajahanzaib/indexer-replay-oracle"
+license: MIT
+abstract: "iro tests whether an application's persistent event projection survives real-world replay conditions. It feeds offline canonical blockchain events to a consumer, injects duplicate deliveries, triggers process restarts, exercises a negotiated crash-after-commit boundary, and compares normalized projection state."
+keywords:
+  - blockchain
+  - indexer
+  - replay-testing
+  - fault-injection
+  - event-sourcing
